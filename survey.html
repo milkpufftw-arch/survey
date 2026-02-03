@@ -1,0 +1,467 @@
+import React, { useState } from 'react';
+
+const App = () => {
+    const [submitted, setSubmitted] = useState(false);
+    const [jobTitleOther, setJobTitleOther] = useState("");
+    const [isJobTitleOtherSelected, setIsJobTitleOtherSelected] = useState(false);
+
+    // Google Form Action URL
+    const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdS2jA3Wl9--Fd9Ep_J_jmYsbqHiqpEkaMmfxPxZty-L25eLA/formResponse";
+
+    // Submit Handler
+    const handleSubmit = () => {
+        setSubmitted(true);
+    };
+
+    const cssStyles = `
+        @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap');
+
+        .clay-font-wrapper {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: #FFF8E1; /* Pastel Cream Background */
+            color: #333333;
+            min-height: 100vh;
+        }
+
+        /* Claymorphism Utilities */
+        .clay-card {
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 
+                8px 8px 16px #d1c9b8, 
+                -8px -8px 16px #ffffff;
+            border: 2px solid #fff;
+        }
+
+        .clay-input {
+            background: #F0F4F8;
+            border-radius: 1.5rem;
+            box-shadow: 
+                inset 6px 6px 10px #d9dce0, 
+                inset -6px -6px 10px #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .clay-input:focus {
+            outline: none;
+            background: #E8F0FE;
+            box-shadow: 
+                inset 4px 4px 8px #c5cad3, 
+                inset -4px -4px 8px #ffffff;
+        }
+
+        /* Custom Radio & Checkbox Styling */
+        .clay-radio-label {
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .clay-radio-label:active {
+            transform: scale(0.98);
+        }
+        
+        .clay-radio-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #F0F4F8;
+            box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .clay-radio-input:checked + .clay-radio-indicator {
+            background: #FF6B6B; /* Toy Red */
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .clay-radio-input:checked + .clay-radio-indicator::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .clay-checkbox-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+            background: #F0F4F8;
+            box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .clay-checkbox-input:checked + .clay-checkbox-indicator {
+            background: #4ECDC4; /* Toy Teal */
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .clay-checkbox-input:checked + .clay-checkbox-indicator::after {
+            content: '✔';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* 3D Button */
+        .clay-btn {
+            background: #FFD166; /* Toy Yellow */
+            color: #333;
+            border-radius: 1.5rem;
+            border: none;
+            font-weight: 800;
+            box-shadow: 
+                6px 6px 12px #d4b06e, 
+                -6px -6px 12px #ffe69e;
+            transition: all 0.2s ease;
+            transform: translateY(0);
+        }
+        
+        .clay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                8px 8px 16px #d4b06e, 
+                -8px -8px 16px #ffe69e;
+            background: #FFDA85;
+        }
+        
+        .clay-btn:active {
+            transform: translateY(2px);
+            box-shadow: 
+                2px 2px 4px #d4b06e, 
+                -2px -2px 4px #ffe69e;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Decorative Elements */
+        .blob {
+            position: fixed;
+            z-index: 0;
+            filter: blur(40px);
+            opacity: 0.6;
+        }
+
+        .other-input-container {
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        
+        .other-input-container.open {
+            max-height: 60px;
+            opacity: 1;
+            margin-top: 10px;
+        }
+    `;
+
+    if (submitted) {
+        return (
+            <div className="clay-font-wrapper flex items-center justify-center p-4">
+                <style>{cssStyles}</style>
+                <div className="clay-card p-10 max-w-lg w-full text-center floating z-10">
+                    <div className="text-6xl mb-6">🎉</div>
+                    <h1 className="text-3xl font-extrabold text-[#FF6B6B] mb-4">收到您的回覆囉！</h1>
+                    <p className="text-lg text-gray-600 mb-8">感謝您撥空填寫，我們非常期待與您在團督相見！</p>
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="clay-btn py-3 px-8 text-lg w-full cursor-pointer"
+                    >
+                        填寫另一份
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="clay-font-wrapper py-10 px-4 relative overflow-hidden">
+            <style>{cssStyles}</style>
+            
+            {/* Background Blobs */}
+            <div className="blob bg-[#FFD166] w-96 h-96 rounded-full top-0 left-[-100px]"></div>
+            <div className="blob bg-[#FF6B6B] w-80 h-80 rounded-full bottom-0 right-[-50px]"></div>
+            <div className="blob bg-[#4ECDC4] w-64 h-64 rounded-full top-[40%] right-[10%]"></div>
+
+            <div className="max-w-3xl mx-auto relative z-10">
+                
+                {/* Header */}
+                <div className="clay-card p-8 mb-8 text-center relative z-10 border-t-8 border-[#FF6B6B]">
+                    <h1 className="text-2xl md:text-3xl font-extrabold mb-4 text-[#333] leading-relaxed">
+                        第一線主管社會工作督導<br/>
+                        <span className="text-[#FF6B6B]">共學與支持團體</span>｜事前需求調查問卷
+                    </h1>
+                    <div className="w-16 h-2 bg-[#FFD166] rounded-full mx-auto mb-6"></div>
+                    <p className="text-gray-600 text-left leading-7">
+                        大家好 ☁️ <br/>
+                        本問卷旨在了解第一線主管對社會工作督導團體之期待與需求，作為團督主題與進行方式規劃依據。
+                        填答內容僅作整體分析，不作個別評核，請安心填寫！ ✨
+                    </p>
+                </div>
+
+                {/* Form */}
+                <form 
+                    action={GOOGLE_FORM_ACTION} 
+                    method="POST" 
+                    target="hidden_iframe" 
+                    onSubmit={handleSubmit}
+                    className="space-y-6"
+                >
+                    {/* 1. Name */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            ✏️ 姓名
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="entry.715218846" 
+                            required 
+                            className="clay-input w-full p-4 text-lg"
+                            placeholder="請輸入您的姓名"
+                        />
+                    </div>
+
+                    {/* 2. Job Title */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            1️⃣ 您目前的職稱
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <div className="space-y-3">
+                            <label className="flex items-center clay-radio-label">
+                                <input 
+                                    type="radio" 
+                                    name="entry.1078097171" 
+                                    value="督導" 
+                                    className="hidden clay-radio-input" 
+                                    required 
+                                    onChange={() => setIsJobTitleOtherSelected(false)}
+                                />
+                                <div className="clay-radio-indicator"></div>
+                                <span className="text-lg">督導</span>
+                            </label>
+                            <label className="flex items-center clay-radio-label">
+                                <input 
+                                    type="radio" 
+                                    name="entry.1078097171" 
+                                    value="組長" 
+                                    className="hidden clay-radio-input"
+                                    onChange={() => setIsJobTitleOtherSelected(false)}
+                                />
+                                <div className="clay-radio-indicator"></div>
+                                <span className="text-lg">組長</span>
+                            </label>
+                            <label className="flex items-center clay-radio-label">
+                                <input 
+                                    type="radio" 
+                                    name="entry.1078097171" 
+                                    value="__other_option__" 
+                                    className="hidden clay-radio-input"
+                                    onChange={() => setIsJobTitleOtherSelected(true)}
+                                />
+                                <div className="clay-radio-indicator"></div>
+                                <span className="text-lg">其他</span>
+                            </label>
+                            <div className={`other-input-container ${isJobTitleOtherSelected ? 'open' : ''}`}>
+                                <input 
+                                    type="text" 
+                                    name="entry.1078097171.other_option_response" 
+                                    className="clay-input w-full p-3 ml-8 w-[calc(100%-2rem)]"
+                                    placeholder="請輸入其他職稱"
+                                    disabled={!isJobTitleOtherSelected}
+                                    required={isJobTitleOtherSelected}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 3. Years of Service */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            2️⃣ 您擔任主管年資
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {["未滿 1 年", "1–3 年", "3–5 年", "5 年以上"].map((opt, idx) => (
+                                <label key={idx} className="flex items-center clay-radio-label p-2">
+                                    <input type="radio" name="entry.141139847" value={opt} className="hidden clay-radio-input" required />
+                                    <div className="clay-radio-indicator"></div>
+                                    <span className="text-lg">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 4. Draining Aspect */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            3️⃣ 目前在督導角色中，您感到最耗能的是（可複選）
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <div className="space-y-3">
+                            {["行政與制度責信", "支持社工情緒與狀態", "專業判斷與風險拿捏", "上下溝通與中介角色", "人力不足與時間壓力"].map((opt, idx) => (
+                                <label key={idx} className="flex items-center clay-radio-label cursor-pointer hover:bg-white/50 rounded-xl p-1 transition">
+                                    <input type="checkbox" name="entry.2085590103" value={opt} className="hidden clay-checkbox-input" />
+                                    <div className="clay-checkbox-indicator"></div>
+                                    <span className="text-lg">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 5. Role Clarity */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            4️⃣ 您目前對自己「督導角色清晰度」的感受
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <div className="space-y-3">
+                            {["非常不清楚", "有時清楚、有時混亂", "大致清楚", "非常清楚"].map((opt, idx) => (
+                                <label key={idx} className="flex items-center clay-radio-label">
+                                    <input type="radio" name="entry.358792550" value={opt} className="hidden clay-radio-input" required />
+                                    <div className="clay-radio-indicator"></div>
+                                    <span className="text-lg">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 6. Expectations (Pick 2) */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            5️⃣ 參與本次督導團體，您最期待獲得的是
+                            <span className="text-sm font-normal text-gray-500 ml-2">（請選 2 項）</span>
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <div className="space-y-3">
+                            {["督導概念與判斷架構", "實務案例討論", "行政制度討論與回饋", "跨區經驗交流", "被支持與被理解的空間"].map((opt, idx) => (
+                                <label key={idx} className="flex items-center clay-radio-label cursor-pointer hover:bg-white/50 rounded-xl p-1 transition">
+                                    <input type="checkbox" name="entry.1493443325" value={opt} className="hidden clay-checkbox-input" />
+                                    <div className="clay-checkbox-indicator"></div>
+                                    <span className="text-lg">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 7. Preferred Style */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            6️⃣ 您較能接受的團督方式
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <div className="space-y-3">
+                            {["有清楚架構與引導", "彈性討論為主", "架構與彈性並行"].map((opt, idx) => (
+                                <label key={idx} className="flex items-center clay-radio-label">
+                                    <input type="radio" name="entry.2146426027" value={opt} className="hidden clay-radio-input" required />
+                                    <div className="clay-radio-indicator"></div>
+                                    <span className="text-lg">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 8. Stuck Point */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            7️⃣ 請用一句話形容，您目前在督導工作中「最卡住的地方」是什麼？
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <textarea 
+                            name="entry.1378578368" 
+                            rows="3" 
+                            required
+                            className="clay-input w-full p-4 text-lg resize-none"
+                            placeholder="例如：不知道如何處理同仁的情緒..."
+                        ></textarea>
+                    </div>
+
+                    {/* 9. Clarification */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            8️⃣ 若本團督能協助您「釐清一件事」，您最希望是哪一件？
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <textarea 
+                            name="entry.1436316625" 
+                            rows="3" 
+                            required
+                            className="clay-input w-full p-4 text-lg resize-none"
+                            placeholder="例如：如何設立界線..."
+                        ></textarea>
+                    </div>
+
+                    {/* 10. Other Suggestions */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            9️⃣ 對本次線上督導團體，您是否有其他期待或提醒？
+                        </label>
+                        <textarea 
+                            name="entry.1307003244" 
+                            rows="3" 
+                            className="clay-input w-full p-4 text-lg resize-none"
+                            placeholder="歡迎分享您的想法..."
+                        ></textarea>
+                    </div>
+
+                    {/* 11. Meeting Time */}
+                    <div className="clay-card p-6 md:p-8">
+                        <label className="block text-lg font-bold mb-4 text-[#4ECDC4]">
+                            🕒 第一次見面的時間 14:00-16:00
+                            <span className="text-[#FF6B6B] ml-1">*</span>
+                        </label>
+                        <div className="flex flex-wrap gap-4">
+                            {["3/6", "3/9", "3/11"].map((opt, idx) => (
+                                <label key={idx} className="flex items-center clay-radio-label bg-[#FDF6E3] px-4 py-2 rounded-2xl shadow-sm border border-transparent hover:border-[#FFD166] transition">
+                                    <input type="checkbox" name="entry.1587939563" value={opt} className="hidden clay-checkbox-input" />
+                                    <div className="clay-checkbox-indicator"></div>
+                                    <span className="text-lg font-bold">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Hidden Fields required by Google Forms */}
+                    <input type="hidden" name="fvv" value="1" />
+                    <input type="hidden" name="fbzx" value="4104165169933466970" />
+                    <input type="hidden" name="pageHistory" value="0" />
+
+                    {/* Submit Button */}
+                    <div className="text-center pt-6 pb-20">
+                        <button type="submit" className="clay-btn text-2xl py-4 px-12 w-full md:w-auto md:min-w-[300px] cursor-pointer">
+                            送出問卷 🚀
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {/* Hidden iframe for submission */}
+            <iframe 
+                name="hidden_iframe" 
+                id="hidden_iframe" 
+                style={{display: "none"}} 
+            ></iframe>
+        </div>
+    );
+};
+
+export default App;
